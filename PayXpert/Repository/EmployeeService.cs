@@ -124,7 +124,10 @@ namespace PayXpert.Repository
             }
             return employees;
         }
-       
+
+
+
+
         public Employee GetEmployeeById(int employeeId)
         {
             Employee foundEmployee = null;
@@ -158,6 +161,7 @@ namespace PayXpert.Repository
 
             return foundEmployee;
         }
+
         public int UpdateEmployee(Employee updatedEmployee)
         {
             using (SqlConnection sqlConnection = new SqlConnection(connectionString))

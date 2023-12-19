@@ -1,4 +1,5 @@
-﻿using PayXpert.Model;
+﻿using PayXpert.Exceptions;
+using PayXpert.Model;
 using PayXpert.Utility;
 using System;
 using System.Collections.Generic;
@@ -132,61 +133,57 @@ namespace PayXpert.Repository
 
             return taxesForYear;
         }
-        //public int CalculateTax(int employeeId, int taxYear)
-        //{
-            
-        //    decimal taxableIncome = GetTaxableIncome(employeeId);
-
-            
-        //    decimal taxAmount = taxableIncome * 0.10m;
-
-            
-        //    return (int)taxAmount;
-        //}
-
-        //public decimal GetTaxableIncome(int employeeId)
-        //{
-        //    decimal taxableIncome = 0;
 
 
-        //    using (SqlConnection sqlConnection = new SqlConnection(connectionString))
-        //    using (SqlCommand cmd = new SqlCommand("SELECT TaxableIncome FROM TAX WHERE EmployeeID = @EmployeeId", sqlConnection))
-        //    {
-        //        cmd.Parameters.AddWithValue("@EmployeeId", employeeId);
-
-        //        sqlConnection.Open();
-        //        SqlDataReader reader = cmd.ExecuteReader();
-
-        //        if (reader.Read())
-        //        {
-        //            taxableIncome = (decimal)reader["TaxableIncome"];
-        //        }
-        //    }
-
-        //    return taxableIncome;
-        //}
-        public int CalculateTax(int employeeId, int taxYear)
+        public Tax CalculateTax(int employeeId, int taxYear, double taxableIncome)
         {
-            decimal taxableIncome = 0;
+            Tax calculatedTax = new Tax();
 
-            using (SqlConnection sqlConnection = new SqlConnection(connectionString))
-            using (SqlCommand cmd = new SqlCommand("SELECT TaxableIncome FROM TAX WHERE EmployeeID = @EmployeeId", sqlConnection))
+            try
             {
-                cmd.Parameters.AddWithValue("@EmployeeId", employeeId);
-
-                sqlConnection.Open();
-                SqlDataReader reader = cmd.ExecuteReader();
-
-                if (reader.Read())
+                using (SqlConnection sqlConnection = new SqlConnection(connectionString))
                 {
-                    taxableIncome = (decimal)reader["TaxableIncome"];
+                    cmd.CommandText = "INSERT INTO Tax (EmployeeID, TaxYear, TaxableIncome, TaxAmount) " +
+                                      "VALUES (@EmployeeID, @TaxYear, @TaxableIncome, @TaxAmount); " +
+                                      "SELECT SCOPE_IDENTITY();";
+                    cmd.Parameters.Clear();
+                    cmd.Parameters.AddWithValue("@EmployeeID", employeeId);
+                    cmd.Parameters.AddWithValue("@TaxYear", taxYear);
+
+                   
+                    double taxAmount = taxableIncome * 0.10;
+
+                    cmd.Parameters.AddWithValue("@TaxableIncome", taxableIncome);
+                    cmd.Parameters.AddWithValue("@TaxAmount", taxAmount);
+
+                    cmd.Connection = sqlConnection;
+                    sqlConnection.Open();
+
+                    object taxId = cmd.ExecuteScalar();
+
+                    if (taxId != null)
+                    {
+                        calculatedTax = GetTaxById(Convert.ToInt32(taxId));
+                    }
+                    else
+                    {
+                        throw new TaxCalculationException("Error: Tax ID not retrieved after insertion.");
+                    }
                 }
             }
+            catch (TaxCalculationException ex)
+            {
+                Console.WriteLine($"Tax calculation error: {ex.Message}");
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.Message);
+            }
 
-            decimal taxAmount = taxableIncome * 0.10m;
-
-            return (int)taxAmount;
+            return calculatedTax;
         }
+
+
 
 
 

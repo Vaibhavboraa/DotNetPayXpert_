@@ -13,7 +13,8 @@ namespace PayXpert.Repository
         public Tax GetTaxById(int taxId);
         public List<Tax> GetTaxesForEmployee(int employeeId);
         public List<Tax> GetTaxesForYear(int taxYear);
-        public int CalculateTax(int employeeId, int taxYear);
-       
+        public Tax CalculateTax(int employeeId, int taxYear, double taxableIncome);
+
+
     }
 }

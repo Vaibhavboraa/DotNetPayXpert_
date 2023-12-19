@@ -29,7 +29,7 @@ while (true)
             Console.WriteLine("3. GetAllEmployees");
             Console.WriteLine("4. AddEmployee");
             Console.WriteLine("5. UpdateEmployee");
-            Console.WriteLine("6. RemoveEmployee");
+            Console.WriteLine("6. RemoveEmployee"); 
 
             int employeeChoice = int.Parse(Console.ReadLine());
 
@@ -47,7 +47,7 @@ while (true)
                     break;
                 case 3:
                     Console.WriteLine("Getting all employees...");
-
+                    GetAllEmployees();
                     break;
                 case 4:
                     Console.WriteLine("Adding employee...");
@@ -180,7 +180,20 @@ while (true)
 
 
 
+
+
+
+
+
+
+
+
 #region  employee
+
+
+
+
+
 
 ////////////////// ADD EMPLOYEE
 
@@ -715,6 +728,103 @@ void GetPayrollsForPeriod()
         Console.WriteLine($"An error occurred: {ex.Message}");
     }
 }
+//void GeneratePayroll()
+//{
+//    PayrollService payrollService = new PayrollService();
+
+//    Console.WriteLine("Enter Payroll Details:");
+
+//    Console.Write("Enter Employee ID: ");
+//    int employeeId;
+//    while (!int.TryParse(Console.ReadLine(), out employeeId))
+//    {
+//        Console.WriteLine("Invalid input. Please enter a valid numeric Employee ID: ");
+//    }
+
+//    Console.Write("Enter Start Date (YYYY-MM-DD): ");
+//    DateTime startDate;
+//    while (!DateTime.TryParse(Console.ReadLine(), out startDate))
+//    {
+//        Console.WriteLine("Invalid date format. Please enter a valid date (YYYY-MM-DD): ");
+//    }
+
+//    Console.Write("Enter End Date (YYYY-MM-DD): ");
+//    DateTime endDate;
+//    while (!DateTime.TryParse(Console.ReadLine(), out endDate))
+//    {
+//        Console.WriteLine("Invalid date format. Please enter a valid date (YYYY-MM-DD): ");
+//    }
+
+//    Console.Write("Enter Basic Salary: ");
+//    decimal basicSalary;
+//    while (!decimal.TryParse(Console.ReadLine(), out basicSalary))
+//    {
+//        Console.WriteLine("Invalid input. Please enter a valid numeric Basic Salary: ");
+//    }
+
+//    Console.Write("Enter Overtime Pay: ");
+//    decimal overtimePay;
+//    while (!decimal.TryParse(Console.ReadLine(), out overtimePay))
+//    {
+//        Console.WriteLine("Invalid input. Please enter a valid numeric Overtime Pay: ");
+//    }
+
+//    Console.Write("Enter Deductions: ");
+//    decimal deductions;
+//    while (!decimal.TryParse(Console.ReadLine(), out deductions))
+//    {
+//        Console.WriteLine("Invalid input. Please enter a valid numeric Deductions: ");
+//    }
+
+//    try
+//    {
+
+//        payrollService.GeneratePayroll(new Payroll
+//        {
+//            EmployeeID = employeeId,
+//            PayPeriodStartDate = startDate,
+//            PayPeriodEndDate = endDate,
+//            BasicSalary = basicSalary,
+//            OvertimePay = overtimePay,
+//            Deductions = deductions
+//        });
+
+//        Console.WriteLine("\nPayroll Generated Successfully.");
+//    }
+//    catch (PayrollGenerationException ex)
+//    {
+//        Console.WriteLine($"\nError generating payroll: {ex.Message}");
+//    }
+//}
+void GeneratePayroll()
+{
+    PayrollService payrollService = new PayrollService();
+
+    // Get input from the user or provide values directly
+    Console.Write("Enter Employee ID: ");
+    int employeeId = int.Parse(Console.ReadLine());
+
+    Console.Write("Enter Start Date (YYYY-MM-DD): ");
+    DateTime startDate = DateTime.Parse(Console.ReadLine());
+
+    Console.Write("Enter End Date (YYYY-MM-DD): ");
+    DateTime endDate = DateTime.Parse(Console.ReadLine());
+
+    Console.Write("Enter Basic Salary: ");
+    double basicSalary = double.Parse(Console.ReadLine());
+
+    Console.Write("Enter Overtime Pay: ");
+    double overtimePay = double.Parse(Console.ReadLine());
+
+    Console.Write("Enter Deductions: ");
+    double deductions = double.Parse(Console.ReadLine());
+
+
+    Payroll generatedPayroll = payrollService.GeneratePayroll(employeeId, startDate, endDate, basicSalary, overtimePay, deductions);
+
+
+    Console.WriteLine($"Payroll generated successfully. Payroll ID: {generatedPayroll.PayrollID}");
+}
 #endregion
 
 
@@ -726,40 +836,42 @@ void GetPayrollsForPeriod()
 ///////////////// CALCULATE TAX
 
 
-void CalculateTax()
-{
-    TaxService taxService = new TaxService();
-    try
-    {
-
-        Console.Write("Enter Employee ID: ");
-        int employeeId;
-        while (!int.TryParse(Console.ReadLine(), out employeeId))
-        {
-            Console.WriteLine("Invalid input. Please enter a valid integer for Employee ID.");
-            Console.Write("Enter Employee ID: ");
-        }
-
-        Console.Write("Enter Tax Year: ");
-        int taxYear;
-        while (!int.TryParse(Console.ReadLine(), out taxYear))
-        {
-            Console.WriteLine("Invalid input. Please enter a valid integer for Tax Year.");
-            Console.Write("Enter Tax Year: ");
-        }
+//void CalculateTax()
+//{
 
 
-        int taxAmount = taxService.CalculateTax(employeeId, taxYear);
+//    TaxService taxService = new TaxService();
+//    try
+//    {
+
+//        Console.Write("Enter Employee ID: ");
+//        int employeeId;
+//        while (!int.TryParse(Console.ReadLine(), out employeeId))
+//        {
+//            Console.WriteLine("Invalid input. Please enter a valid integer for Employee ID.");
+//            Console.Write("Enter Employee ID: ");
+//        }
+
+//        Console.Write("Enter Tax Year: ");
+//        int taxYear;
+//        while (!int.TryParse(Console.ReadLine(), out taxYear))
+//        {
+//            Console.WriteLine("Invalid input. Please enter a valid integer for Tax Year.");
+//            Console.Write("Enter Tax Year: ");
+//        }
 
 
-        Console.WriteLine($"Tax Amount for Employee ID {employeeId} in Tax Year {taxYear}: {taxAmount}");
-    }
-    catch (Exception ex)
-    {
+//        int taxAmount = taxService.CalculateTax(employeeId, taxYear);
 
-        Console.WriteLine($"An unexpected error occurred: {ex.Message}");
-    }
-}
+
+//        Console.WriteLine($"Tax Amount for Employee ID {employeeId} in Tax Year {taxYear}: {taxAmount}");
+//    }
+//    catch (Exception ex)
+//    {
+
+//        Console.WriteLine($"An unexpected error occurred: {ex.Message}");
+//    }
+//}
 
 /////////////  GET TAX BY ID(TAX ID)
 
@@ -882,6 +994,34 @@ void GetTaxesForYear()
 
         Console.WriteLine(ex.Message);
     }
+}
+
+
+
+void CalculateTax()
+{
+    try
+    {
+        TaxService taxService = new TaxService();
+        // Example usage for CalculateTax
+        Console.WriteLine("Enter Employee ID:");
+        int employeeId = int.Parse(Console.ReadLine());
+
+        Console.WriteLine("Enter Tax Year:");
+        int taxYear = int.Parse(Console.ReadLine());
+
+        Console.WriteLine("Enter Taxable Income:");
+        double taxableIncome = double.Parse(Console.ReadLine());
+
+        Tax calculatedTax = taxService.CalculateTax(employeeId, taxYear, taxableIncome);
+        Console.WriteLine($"Calculated Tax Amount: {calculatedTax.TaxAmount}");
+    }
+    catch (Exception ex)
+    {
+        Console.WriteLine($"Error: {ex.Message}");
+    }
+
+
 }
 
 #endregion
@@ -1075,24 +1215,8 @@ void GetFinancialRecordsForDate()
 
 #endregion
 
-//void GetAllEmployee()
-//{
-//    employeeService.GetAllEmployees();
-//}
-void GeneratePayroll()
-{
-    PayrollService payrollService = new PayrollService();
 
-    // Get user input for employeeId, startDate, and endDate
-    Console.Write("Enter Employee ID: ");
-    int employeeId = Convert.ToInt32(Console.ReadLine());
 
-    Console.Write("Enter Pay Period Start Date (YYYY-MM-DD): ");
-    DateTime startDate = DateTime.Parse(Console.ReadLine());
 
-    Console.Write("Enter Pay Period End Date (YYYY-MM-DD): ");
-    DateTime endDate = DateTime.Parse(Console.ReadLine());
 
-    // Call GeneratePayroll method
-    payrollService.GeneratePayroll(employeeId, startDate, endDate);
-}
+

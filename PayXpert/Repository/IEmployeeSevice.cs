@@ -13,7 +13,6 @@ namespace PayXpert.Repository
         public int AddEmployee(Employee employee);
         public int RemoveEmployee(int employeeId);
         public List<Employee> GetAllEmployees();
-        
         public Employee GetEmployeeById(int employeeId);
         public int UpdateEmployee(Employee updatedEmployee);
         public int CalculateAge(int employeeId);

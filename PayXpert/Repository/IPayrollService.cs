@@ -12,7 +12,9 @@ namespace PayXpert.Repository
         public Payroll GetPayrollById(int payrollId);
         public List<Payroll> GetPayrollsForEmployee(int employeeId);
         public List<Payroll> GetPayrollsForPeriod(DateTime startDate, DateTime endDate);
-        public void GeneratePayroll(int employeeId, DateTime startDate, DateTime endDate);
+        
+        public Payroll GeneratePayroll(int employeeId, DateTime startDate, DateTime endDate, double basicSalary, double overtimePay, double deductions);
+
 
 
     }

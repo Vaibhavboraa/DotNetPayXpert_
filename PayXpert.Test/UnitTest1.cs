@@ -1,6 +1,7 @@
 using NUnit.Framework;
 using PayXpert.Model;
 using PayXpert.Repository;
+using System.Data.SqlClient;
 
 namespace PayXpert.Test
 {
@@ -59,48 +60,74 @@ namespace PayXpert.Test
                     Assert.AreEqual(employeeId, record.EmployeeID);
                 }
             }
+
+
+
+
+
+
+            [Test]
+            public void TestGeneratePayroll()
+            {
+                // Arrange
+                PayrollService payrollService = new PayrollService();
+                payrollService.connectionString = connectionString;
+
+                int employeeId = 5; 
+                DateTime startDate = new DateTime(2002, 9, 9);
+                DateTime endDate = new DateTime(2003, 9, 9);
+                double basicSalary = 30000.00;
+                double overtimePay = 300.00;
+                double deductions = 200.00;
+
+                // Act
+                Payroll generatedPayroll = payrollService.GeneratePayroll(employeeId, startDate, endDate, basicSalary, overtimePay, deductions);
+
+                // Assert
+                Assert.IsNotNull(generatedPayroll);
+                Assert.AreEqual(employeeId, generatedPayroll.EmployeeID);
+                Assert.AreEqual(startDate, generatedPayroll.PayPeriodStartDate);
+                Assert.AreEqual(endDate, generatedPayroll.PayPeriodEndDate);
+                Assert.AreEqual(basicSalary, generatedPayroll.BasicSalary);
+                Assert.AreEqual(overtimePay, generatedPayroll.OvertimePay);
+                Assert.AreEqual(deductions, generatedPayroll.Deductions);
+                Assert.AreEqual(basicSalary + overtimePay - deductions, generatedPayroll.NetSalary);
+            }
+
         [Test]
-        public void CalculateTax_ValidInput_ReturnsCorrectTaxAmount()
+        public void TestCalculateTax()
         {
-            
-            TaxService taxService = new TaxService(connectionString);
+            // Arrange
+            TaxService taxService = new TaxService();
+            taxService.connectionString = connectionString;
+
+            int employeeId = 5; 
+            int taxYear = 2024;
+            double taxableIncome = 40000.00;
+
+            // Act
+            Tax calculatedTax = taxService.CalculateTax(employeeId, taxYear, taxableIncome);
+
+            // Assert
+            Assert.IsNotNull(calculatedTax);
+            Assert.AreEqual(employeeId, calculatedTax.EmployeeID);
+            Assert.AreEqual(taxYear, calculatedTax.TaxYear);
+            Assert.AreEqual(taxableIncome, calculatedTax.TaxableIncome);
 
             
-            int employeeId = 2;
-            int taxYear = 2023;
-
-            
-            int result = taxService.CalculateTax(employeeId, taxYear);
-
-            
-            Assert.AreEqual(4500, result); 
+            double expectedTaxAmount = taxableIncome * 0.10;
+            Assert.AreEqual(expectedTaxAmount, (double)calculatedTax.TaxAmount, 0.10); 
         }
 
-       
 
-        [Test]
-        public void GeneratePayroll_ValidInput_CorrectNetSalary()
-        {
 
-            PayrollService payrollService = new PayrollService();
-            payrollService.connectionString = connectionString;
 
-            int employeeId = 4;
-            DateTime startDate = DateTime.Parse("2023-01-01");
-            DateTime endDate = DateTime.Parse("2023-01-15");
-            decimal basicSalary = 5200.00m;
-            decimal overtimePay = 220.00m;
-            decimal deductions = 320.00m;
-            decimal expectedNetSalary = 5100.00m;
 
-            
-            payrollService.GeneratePayroll(employeeId, startDate, endDate);
 
-           
-            Payroll generatedPayroll = payrollService.GetPayrollById(employeeId);
 
-            Assert.AreEqual(expectedNetSalary, generatedPayroll.NetSalary);
-        }
+
+
+
 
     }
 }
